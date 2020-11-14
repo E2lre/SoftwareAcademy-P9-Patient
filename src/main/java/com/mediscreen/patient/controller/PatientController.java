@@ -3,7 +3,7 @@ package com.mediscreen.patient.controller;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.model.dto.PatientDto;
 import com.mediscreen.patient.service.PatientService;
-import org.modelmapper.ModelMapper;
+//import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;

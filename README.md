@@ -1,6 +1,6 @@
 # SoftwareAcademy-P9-Patient
 
-##Installation
+## Installation
 
-###Database installation
+### Database installation
 * execute CreateDatabase.sql file
