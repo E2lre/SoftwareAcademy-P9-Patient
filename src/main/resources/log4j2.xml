@@ -24,7 +24,7 @@
             <AppenderRef ref="LogToFile"/>
         </Logger>
 
-        <Logger name="org.springframework" level="warn" additivity="false">
+ <!--       <Logger name="org.springframework" level="warn" additivity="false">
             <AppenderRef ref="LogToConsole"/>
             <AppenderRef ref="LogToFile"/>
         </Logger>
@@ -35,8 +35,8 @@
         <Logger name="com.zaxxer.hikari" level="warn" additivity="false">
             <AppenderRef ref="LogToConsole"/>
             <AppenderRef ref="LogToFile"/>
-        </Logger>
-        <Root level="debug">
+        </Logger>-->
+        <Root level="warn">
             <AppenderRef ref="LogToFile"/>
             <AppenderRef ref="LogToConsole"/>
         </Root>
