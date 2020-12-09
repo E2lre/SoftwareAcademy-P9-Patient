@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,6 +31,8 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@AutoConfigureTestDatabase
 public class PatientServiceTest {
 
     private static final Logger logger = LogManager.getLogger(PatientServiceTest.class);
@@ -73,6 +76,7 @@ public class PatientServiceTest {
     /*------------------------ findAll ---------------------------------*/
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void findAll_WhenDBISNotEmpty_PatientLisIsReturn(){
         //GIVEN
         List<Patient> patientList = new ArrayList<>();
@@ -85,4 +89,31 @@ public class PatientServiceTest {
         assertThat(patientResultList).isNotEmpty();
     }
 
+    /*------------------------ addPatient ---------------------------------*/
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void addPatient_inexistingPatientGiven_patientCreated(){
+
+        //GIVEN
+        Mockito.when(patientDao.existsByLastNameAndFirstName(lastNameConst,firstNameConst)).thenReturn(false);
+
+        //WHEN
+        boolean result =  patientService.addPatient(patient);
+        //THEN
+        assertThat(result).isTrue();
+    }
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void addPatient_existingPatientGiven_patientNotCreated(){
+
+        //GIVEN
+        Mockito.when(patientDao.existsByLastNameAndFirstName(lastNameConst,firstNameConst)).thenReturn(true);
+
+        //WHEN
+        boolean result =  patientService.addPatient(patient);
+        //THEN
+        assertThat(result).isFalse();
+    }
 }

@@ -7,5 +7,5 @@ import java.util.List;
 public interface PatientService {
     public List<Patient> findAll();
     //public Patient findById(long id);
-
+    public boolean addPatient(Patient patient);
 }

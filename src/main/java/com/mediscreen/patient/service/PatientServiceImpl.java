@@ -23,6 +23,23 @@ public class PatientServiceImpl implements PatientService {
         return resultPatients;
     }
 
+    @Override
+    public boolean addPatient(Patient patient) {
+        logger.info("Start");
+        boolean result = false;
+        //Check if patient already exist
+        if (!patientDao.existsByLastNameAndFirstName(patient.getLastName(),patient.getFirstName()))  {
+            Patient patientResult = patientDao.save(patient);
+            result = true;
+            logger.info("The patient "+ patient.getId() + " is create");
+        } else {
+            result = false;
+            logger.info("The patient "+ patient.getId() + " already exist");
+        }
+        logger.info("Finish");
+        return result;
+    }
+
 /*    @Override
     public Patient findById(Integer id) {
    *//*     logger.info("Start/finish pour id"+id.toString());
