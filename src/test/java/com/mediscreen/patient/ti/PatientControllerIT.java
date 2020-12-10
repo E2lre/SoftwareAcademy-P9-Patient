@@ -21,8 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.apache.logging.log4j.LogManager;
@@ -75,7 +74,7 @@ public class PatientControllerIT {
     @Test
     //@WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void listPatients_inExistingPatient_patientIsCreate() throws Exception {
+    public void addPatient_inExistingPatient_patientIsCreate() throws Exception {
         //Given
         Patient patient = new Patient();
         patient.setFirstName(inexistingFirstnameConst);
@@ -98,7 +97,7 @@ public class PatientControllerIT {
     @Test
     //@WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    public void listPatients_ExistingPatient_errorIsReturn() throws Exception {
+    public void addPatient_ExistingPatient_errorIsReturn() throws Exception {
         //Given
         Patient patient = new Patient(); //10,inexistingFirstnameConst,inexistingLastnameConst,birthdateConst,sexConst,addressConst,phoneConst);
         patient.setFirstName(existingFirstnameConst);
@@ -118,6 +117,53 @@ public class PatientControllerIT {
                 .andExpect(status().isNotModified());
     }
 
+    /*---------------------------------------- PUT update Patient -------------------------------*/
+    @Test
+    //@WithMockUser(roles = "USER")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void updatePatient_existingIdPatient_patientIsUpdate() throws Exception {
+        //Given
+        Patient patient = new Patient();
+        patient.setId(0);
+        patient.setFirstName(existingFirstnameConst);
+        patient.setLastName(existingLastnameConst);
+        patient.setBirthdate(birthdateConst);
+        patient.setSex(sexConst);
+        patient.setAddress(addressConst);
+        patient.setPhone(phoneConst);
+
+
+        //WHEN THEN
+        mockMvc.perform(put("/patient")
+                .content(asJsonString(patient))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isAccepted());
+    }
+    @Test
+    //@WithMockUser(roles = "USER")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void updatePatient_inexistingIdPatient_errorIsReturn() throws Exception {
+        //Given
+        Patient patient = new Patient();
+        patient.setId(999);
+        patient.setFirstName(existingFirstnameConst);
+        patient.setLastName(existingLastnameConst);
+        patient.setBirthdate(birthdateConst);
+        patient.setSex(sexConst);
+        patient.setAddress(addressConst);
+        patient.setPhone(phoneConst);
+
+
+        //WHEN THEN
+        mockMvc.perform(put("/patient")
+                .content(asJsonString(patient))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotModified());
+    }
 
     /*---------------------------------------- Utility -------------------------------*/
     public static String asJsonString(final Object obj) {

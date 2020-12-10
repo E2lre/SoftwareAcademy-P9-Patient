@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PatientDao extends JpaRepository<Patient, Integer> {
     boolean existsByLastNameAndFirstName(String lastName, String firstName);
+    Patient findById (long id);
 }

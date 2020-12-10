@@ -1,5 +1,6 @@
 package com.mediscreen.patient.controller;
 
+import com.mediscreen.patient.controller.exception.PatientCanNotBeSavedException;
 import com.mediscreen.patient.controller.exception.PatientCanNotbeAddedException;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.model.dto.PatientDto;
@@ -30,6 +31,14 @@ public class PatientController {
         return patientService.findAll();
 
     }
+    /*---------------------------  GET by id -----------------------------*/
+    @GetMapping(value = "patient/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Patient getPatientById(@PathVariable long id) {
+        logger.info("listPatients start/finish-"+id);
+        return patientService.findById(id);
+
+    }
     /*---------------------------  POST Patient -----------------------------*/
     @PostMapping(value = "patient")
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,9 +50,24 @@ public class PatientController {
             finalResult = "The patient " + patient.getId() + " has been created";
         } else {
             finalResult = "The patient " + patient.getId() + " already exist";
+            logger.warn(finalResult);
             throw new PatientCanNotbeAddedException("The patient " + patient.getId() + " already exist");
         }
         return finalResult;
     }
 
+    /*---------------------------  PUT Patient -----------------------------*/
+    @PutMapping(value = "patient")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Patient updatePatient(@RequestBody Patient patient) throws PatientCanNotBeSavedException {
+        Patient finalResult = null;
+        logger.info("savePatients start");
+        finalResult = patientService.updatePatient(patient);
+        if (finalResult == null) {
+
+            logger.warn("The patient " + patient.getId() + " does not exist");
+            throw new PatientCanNotBeSavedException("The patient " + patient.getId() + " does not exist");
+        }
+        return finalResult;
+    }
 }

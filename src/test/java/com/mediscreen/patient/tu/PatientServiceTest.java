@@ -8,6 +8,7 @@ import com.mediscreen.patient.service.PatientService;
 //import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,9 +33,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @AutoConfigureTestDatabase
+//@Configuration
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class PatientServiceTest {
 
     private static final Logger logger = LogManager.getLogger(PatientServiceTest.class);
@@ -115,5 +120,35 @@ public class PatientServiceTest {
         boolean result =  patientService.addPatient(patient);
         //THEN
         assertThat(result).isFalse();
+    }
+
+    /*------------------------ update Patient ---------------------------------*/
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void updatePatient_existingIdPatientGiven_patientUpdated(){
+
+        //GIVEN
+        Mockito.when(patientDao.findById(0)).thenReturn(patient);
+        Mockito.when(patientDao.save(patient)).thenReturn(patient);
+
+        //WHEN
+        Patient result =  patientService.updatePatient(patient);
+        //THEN
+        assertThat(result).isNotNull();
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void updatePatient_inexistingIdPatientGiven_errorIsReturn(){
+
+        //GIVEN
+        Mockito.when(patientDao.findById(0)).thenReturn(null);
+
+        //WHEN
+        Patient result =  patientService.updatePatient(patient);
+        //THEN
+        assertThat(result).isNull();
     }
 }
