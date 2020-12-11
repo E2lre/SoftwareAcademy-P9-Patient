@@ -55,6 +55,7 @@ public class PatientServiceTest {
     String sexConst ="F";
     String addressConst = "10 Downing St";
     String phoneConst = "000-111-2222";
+    String incorrectlastNameConst = "Bond";
 
     @BeforeEach
     public void setUpEach() {
@@ -68,6 +69,7 @@ public class PatientServiceTest {
             patient.setAddress(addressConst);
             patient.setSex(sexConst);
             patient.setPhone(phoneConst);
+            patient.setId(0);
 
             List<Patient> patientList = new ArrayList<>();
             patientList.add(patient);
@@ -94,6 +96,31 @@ public class PatientServiceTest {
         assertThat(patientResultList).isNotEmpty();
     }
 
+    /*------------------------ findByID ---------------------------------*/
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void findById_existingPatientId_PatientIsReturn(){
+        //GIVEN
+                Mockito.when(patientDao.findById(0)).thenReturn(patient);
+
+        //WHEN
+        Patient patientResult =  patientService.findById(0);
+        //THEN
+        assertThat(patientResult).isNotNull();
+    }
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void findById_inexistingPatientId_nullIsReturn(){
+        //GIVEN
+        Mockito.when(patientDao.findById(0)).thenReturn(null);
+
+        //WHEN
+        Patient patientResult =  patientService.findById(0);
+        //THEN
+        assertThat(patientResult).isNull();
+    }
     /*------------------------ addPatient ---------------------------------*/
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
@@ -148,6 +175,58 @@ public class PatientServiceTest {
 
         //WHEN
         Patient result =  patientService.updatePatient(patient);
+        //THEN
+        assertThat(result).isNull();
+    }
+    /*------------------------ delete Patient ---------------------------------*/
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void deletePatient_existingIdAndCorrectPatientGiven_patientDeleted(){
+
+        //GIVEN
+        Mockito.when(patientDao.findById(0)).thenReturn(patient);
+        Mockito.doNothing().when(patientDao).delete(patient);
+
+        //WHEN
+        Patient result =  patientService.deletePatient(0,patient);
+        //THEN
+        assertThat(result).isNotNull();
+    }
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void deletePatient_existingIdAndIncorrectPatientGiven_errorIsReturn(){
+
+        //GIVEN
+        Patient incorrectPatient = new Patient();
+        incorrectPatient.setFirstName(firstNameConst);
+        incorrectPatient.setLastName(incorrectlastNameConst);
+        incorrectPatient.setBirthdate(patient.getBirthdate());
+        incorrectPatient.setAddress(addressConst);
+        incorrectPatient.setSex(sexConst);
+        incorrectPatient.setPhone(phoneConst);
+        incorrectPatient.setId(0);
+
+        Mockito.when(patientDao.findById(0)).thenReturn(patient);
+        Mockito.doNothing().when(patientDao).delete(patient);
+
+        //WHEN
+        Patient result =  patientService.deletePatient(0,incorrectPatient);
+        //THEN
+        assertThat(result).isNull();
+    }
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    //@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void deletePatient_inexistingIdAndCorrectPatientGiven_errorIsReturn(){
+
+        //GIVEN
+        Mockito.when(patientDao.findById(0)).thenReturn(null);
+        Mockito.doNothing().when(patientDao).delete(patient);
+
+        //WHEN
+        Patient result =  patientService.deletePatient(0,patient);
         //THEN
         assertThat(result).isNull();
     }

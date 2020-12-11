@@ -3,6 +3,7 @@ package com.mediscreen.patient.controller;
 import com.mediscreen.patient.controller.exception.PatientCanNotBeDeleteException;
 import com.mediscreen.patient.controller.exception.PatientCanNotBeSavedException;
 import com.mediscreen.patient.controller.exception.PatientCanNotbeAddedException;
+import com.mediscreen.patient.controller.exception.PatientNotFoundException;
 import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.model.dto.PatientDto;
 import com.mediscreen.patient.service.PatientService;
@@ -35,9 +36,16 @@ public class PatientController {
     /*---------------------------  GET by id -----------------------------*/
     @GetMapping(value = "patient/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Patient getPatientById(@PathVariable long id) {
-        logger.info("listPatients start/finish-"+id);
-        return patientService.findById(id);
+    public Patient getPatientById(@PathVariable long id) throws PatientNotFoundException {
+
+        logger.info("listPatients start-"+id);
+        Patient resulPatient = patientService.findById(id);
+        if (resulPatient==null){
+            logger.warn("The patient " + id + " does not exist");
+            throw new PatientNotFoundException("The patient " + id + " does not exist");
+        }
+        logger.info("listPatients finish");
+        return resulPatient;
 
     }
     /*---------------------------  POST Patient -----------------------------*/
@@ -71,15 +79,7 @@ public class PatientController {
         }
         return finalResult;
     }
-    /*---------------------------  DEL Patient -----------------------------*/
 
-    /*
-     * Delete Patient
-     * Give matint Id in Url
-     * @param patient Patient to be delete. it is check with Id in Url
-     * @return
-     * @throws PatientCanNotBeSavedException
-     */
 
     /**
      * Delete Patient

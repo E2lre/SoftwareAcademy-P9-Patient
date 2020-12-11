@@ -70,6 +70,29 @@ public class PatientControllerIT {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+    /*---------------------------------------- GET Patient By Id -------------------------------*/
+    @Test
+    //@WithMockUser(roles = "USER")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void getPatientById_existingPatientId_patientIsDone() throws Exception {
+        //Given
+
+        //WHEN THEN
+        mockMvc.perform(get("/patient/0"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    //@WithMockUser(roles = "USER")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void getPatientById_inexistingPatientId_errorIsReturn() throws Exception {
+        //Given
+
+        //WHEN THEN
+        mockMvc.perform(get("/patient/99"))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
     /*---------------------------------------- POST Add Patient -------------------------------*/
     @Test
     //@WithMockUser(roles = "USER")
@@ -164,7 +187,76 @@ public class PatientControllerIT {
                 .andDo(print())
                 .andExpect(status().isNotModified());
     }
+    /*---------------------------------------- DEL delete Patient -------------------------------*/
+    @Test
+    //@WithMockUser(roles = "USER")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void deletePatient_existingIdAndCorrectPatientGiven_patientDeleted() throws Exception {
+        //Given
+        Patient patient = new Patient();
+        patient.setId(0);
+        patient.setFirstName(existingFirstnameConst);
+        patient.setLastName(existingLastnameConst);
+        patient.setBirthdate(birthdateConst);
+        patient.setSex(sexConst);
+        patient.setAddress(addressConst);
+        patient.setPhone(phoneConst);
 
+
+        //WHEN THEN
+        mockMvc.perform(delete("/patient/0")
+                .content(asJsonString(patient))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    @Test
+    //@WithMockUser(roles = "USER")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void deletePatient_existingIdAndInorrectPatientGiven_patientDeleted() throws Exception {
+        //Given
+        Patient patient = new Patient();
+        patient.setId(1);
+        patient.setFirstName(existingFirstnameConst);
+        patient.setLastName(inexistingLastnameConst);
+        patient.setBirthdate(birthdateConst);
+        patient.setSex(sexConst);
+        patient.setAddress(addressConst);
+        patient.setPhone(phoneConst);
+
+
+        //WHEN THEN
+        mockMvc.perform(delete("/patient/0")
+                .content(asJsonString(patient))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable());
+    }
+    @Test
+    //@WithMockUser(roles = "USER")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    public void deletePatient_inexistingIdAndCorrectPatientGiven_patientDeleted() throws Exception {
+        //Given
+        Patient patient = new Patient();
+        patient.setId(1);
+        patient.setFirstName(existingFirstnameConst);
+        patient.setLastName(existingLastnameConst);
+        patient.setBirthdate(birthdateConst);
+        patient.setSex(sexConst);
+        patient.setAddress(addressConst);
+        patient.setPhone(phoneConst);
+
+
+        //WHEN THEN
+        mockMvc.perform(delete("/patient/99")
+                .content(asJsonString(patient))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable());
+    }
     /*---------------------------------------- Utility -------------------------------*/
     public static String asJsonString(final Object obj) {
         try {
