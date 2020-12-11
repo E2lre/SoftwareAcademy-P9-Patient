@@ -1,5 +1,6 @@
 package com.mediscreen.patient.controller;
 
+import com.mediscreen.patient.controller.exception.PatientCanNotBeDeleteException;
 import com.mediscreen.patient.controller.exception.PatientCanNotBeSavedException;
 import com.mediscreen.patient.controller.exception.PatientCanNotbeAddedException;
 import com.mediscreen.patient.model.Patient;
@@ -67,6 +68,36 @@ public class PatientController {
 
             logger.warn("The patient " + patient.getId() + " does not exist");
             throw new PatientCanNotBeSavedException("The patient " + patient.getId() + " does not exist");
+        }
+        return finalResult;
+    }
+    /*---------------------------  DEL Patient -----------------------------*/
+
+    /*
+     * Delete Patient
+     * Give matint Id in Url
+     * @param patient Patient to be delete. it is check with Id in Url
+     * @return
+     * @throws PatientCanNotBeSavedException
+     */
+
+    /**
+     * Delete Patient
+     * @param id Patient Id to be delete
+     * @param patient Patient to be delete : it is for check with ID
+     * @return patient deleted
+     * @throws PatientCanNotBeSavedException exception if db error or if patient is not correspond to the id
+     */
+    @DeleteMapping(value = "patient/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Patient deletePatient(@PathVariable long id,@RequestBody Patient patient) throws PatientCanNotBeDeleteException {
+        Patient finalResult = null;
+        logger.info("deletePatients start");
+        finalResult = patientService.deletePatient(id,patient);
+        if (finalResult == null) {
+
+            logger.warn("The patient " + patient.getId() + " can not be delete");
+            throw new PatientCanNotBeDeleteException("The patient " + patient.getId() + " can not be delete");
         }
         return finalResult;
     }

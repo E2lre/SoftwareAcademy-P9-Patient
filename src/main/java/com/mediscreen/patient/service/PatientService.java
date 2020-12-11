@@ -9,4 +9,5 @@ public interface PatientService {
     public Patient findById(long id);
     public boolean addPatient(Patient patient);
     public Patient updatePatient(Patient patient);
+    public Patient deletePatient(long id,Patient patient);
 }

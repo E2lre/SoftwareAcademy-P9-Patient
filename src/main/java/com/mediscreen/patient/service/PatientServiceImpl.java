@@ -75,6 +75,30 @@ public class PatientServiceImpl implements PatientService {
         return resultPatient;
     }
 
+    @Override
+    public Patient deletePatient(long id, Patient patient) {
+        logger.info("Start");
+        Patient resultPatient = null;
+        Patient patientById = patientDao.findById(id);
+        //Check correspondance between id and patient with
+        if (patientById!=null) {
+            if ((patientById.getLastName().equals(patient.getLastName())) && (patientById.getFirstName().equals(patient.getFirstName()))) {
+                patientDao.delete(patientById);
+                resultPatient = patient;
+                logger.info("The patient "+ patient.getId() + " is deleted");
+            } else {
+                resultPatient = null;
+                logger.info("The patient " + patient.getId() + "-" + patient.getLastName() + "-" + patient.getFirstName() + " not correspond to " + patientById.getId() + "-" + patientById.getLastName() + "-" + patientById.getFirstName());
+            }
+        } else {
+            resultPatient = null;
+            logger.info("The patient " + id + " is not found");
+
+        }
+        logger.info("Finish");
+        return resultPatient;
+    }
+
 /*    @Override
     public Patient findById(Integer id) {
    *//*     logger.info("Start/finish pour id"+id.toString());
