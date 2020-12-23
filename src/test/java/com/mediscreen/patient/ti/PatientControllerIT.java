@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.persistence.Column;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,7 +42,7 @@ public class PatientControllerIT {
     String inexistingFirstnameConst = "James";
     String inexistingLastnameConst = "Bond";
     String birthdate ="01/13/1693";
-    Date birthdateConst ;
+    LocalDate birthdateConst ;
     String sexConst = "M";
     String addressConst = "10 downing St";
     String phoneConst = "0123456789";
@@ -51,11 +52,12 @@ public class PatientControllerIT {
     @BeforeEach
     public void setUpEach() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            birthdateConst = simpleDateFormat.parse(birthdate);
-        } catch (ParseException e){
-            logger.error(e.getMessage());
-        }
+      //  try {
+            //birthdateConst = LocalDate.parse()simpleDateFormat.parse(birthdate);
+            birthdateConst = LocalDate.parse(birthdate);
+        //} catch (ParseException e){
+        //    logger.error(e.getMessage());
+        //}
     }
 
     /*---------------------------------------- GET Find All -------------------------------*/

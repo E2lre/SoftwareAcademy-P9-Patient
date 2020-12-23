@@ -1,0 +1,22 @@
+version: '3'
+services:
+  config:
+    image: p9-config
+    ports:
+      - "9101:9101"
+    restart: always
+  eureka:
+    depends_on:
+      - config
+    image: p9-eureka
+    ports:
+      - "9102:9102"
+    restart: always
+  springadmin:
+    depends_on:
+      - config
+      - eureka
+    image:  p9-spring-admin
+    ports:
+      - "9105:9105"
+    restart: always

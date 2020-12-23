@@ -29,6 +29,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,8 +61,9 @@ public class PatientServiceTest {
     @BeforeEach
     public void setUpEach() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            Date birthdate = simpleDateFormat.parse(birthdateConst);
+       /* try {*/
+            //Date birthdate = simpleDateFormat.parse(birthdateConst);
+            LocalDate birthdate = LocalDate.parse(birthdateConst);
             patient = new Patient();
             patient.setFirstName(firstNameConst);
             patient.setLastName(lastNameConst);
@@ -75,9 +77,9 @@ public class PatientServiceTest {
             patientList.add(patient);
 
 
-        } catch (ParseException e){
+      /*  } catch (ParseException e){
             logger.error(e.getMessage());
-        }
+        }*/
     }
 
     /*------------------------ findAll ---------------------------------*/

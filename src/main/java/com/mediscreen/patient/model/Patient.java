@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -24,7 +25,7 @@ public class Patient implements Serializable {
     private String lastName;
 
     @NotNull
-    private Date birthdate;
+    private LocalDate birthdate;
 
     @Column(name="sex",length=1)
     @NotNull
@@ -40,7 +41,7 @@ public class Patient implements Serializable {
 
     }
 
-    public Patient(long id, String firstName, String lastName, Date birthdate, String sex, String address, String phone) {
+    public Patient(long id, String firstName, String lastName, LocalDate birthdate, String sex, String address, String phone) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -73,11 +74,11 @@ public class Patient implements Serializable {
         this.lastName = lastName;
     }
 
-    public Date getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 
