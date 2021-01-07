@@ -1,6 +1,9 @@
 package com.mediscreen.patient.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.mediscreen.patient.config.DateSerializerNumberTwo;
 import com.sun.istack.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,6 +28,8 @@ public class Patient implements Serializable {
     private String lastName;
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @JsonSerialize(using= DateSerializerNumberTwo.class)
     private LocalDate birthdate;
 
     @Column(name="sex",length=1)

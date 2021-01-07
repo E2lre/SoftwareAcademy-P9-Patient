@@ -30,6 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +53,7 @@ public class PatientServiceTest {
     //constantes de test
     String firstNameConst = "Tatiana";
     String lastNameConst = "Romanova";
-    String birthdateConst = "01/13/1693";
+    String birthdateConst = "01/03/1693";
     String sexConst ="F";
     String addressConst = "10 Downing St";
     String phoneConst = "000-111-2222";
@@ -63,7 +64,8 @@ public class PatientServiceTest {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
        /* try {*/
             //Date birthdate = simpleDateFormat.parse(birthdateConst);
-            LocalDate birthdate = LocalDate.parse(birthdateConst);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate birthdate = LocalDate.parse(birthdateConst,df);
             patient = new Patient();
             patient.setFirstName(firstNameConst);
             patient.setLastName(lastNameConst);

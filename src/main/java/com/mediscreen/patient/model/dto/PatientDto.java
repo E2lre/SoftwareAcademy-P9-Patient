@@ -1,3 +1,4 @@
+/*
 package com.mediscreen.patient.model.dto;
 
 
@@ -97,3 +98,4 @@ public class PatientDto {
     }
 
 }
+*/

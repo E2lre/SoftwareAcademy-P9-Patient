@@ -5,7 +5,7 @@ import com.mediscreen.patient.controller.exception.PatientCanNotBeSavedException
 import com.mediscreen.patient.controller.exception.PatientCanNotbeAddedException;
 import com.mediscreen.patient.controller.exception.PatientNotFoundException;
 import com.mediscreen.patient.model.Patient;
-import com.mediscreen.patient.model.dto.PatientDto;
+//import com.mediscreen.patient.model.dto.PatientDto;
 import com.mediscreen.patient.service.PatientService;
 //import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

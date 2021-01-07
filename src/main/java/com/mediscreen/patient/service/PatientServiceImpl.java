@@ -38,7 +38,7 @@ public class PatientServiceImpl implements PatientService {
         boolean result = false;
         //Check if patient already exist
         if (!patientDao.existsByLastNameAndFirstName(patient.getLastName(),patient.getFirstName()))  {
-            Patient patientResult = patientDao.save(patient);
+            patientDao.save(patient);
             result = true;
             logger.info("The patient "+ patient.getId() + " is create");
         } else {
@@ -53,23 +53,20 @@ public class PatientServiceImpl implements PatientService {
     public Patient updatePatient(Patient patient) {
         logger.info("Start");
         Patient resultPatient = null;
-        boolean saveOk = false;
-        Integer i = (int) (long) patient.getId();
+       // Integer i = (int) (long) patient.getId();
         resultPatient = patientDao.findById(patient.getId());
 
         if (resultPatient!=null) { // ID exist in DB
             if  (resultPatient.getLastName().equals(patient.getLastName())){ //And it is the good lastname
-                saveOk = true;
+                //saveOk = true;
+                resultPatient = patientDao.save(patient);
+                logger.info("The patient "+ patient.getId() + " is updated");
+            }  else {
+                resultPatient = null;
+                logger.info("The patient "+ patient.getId() + " does not exist");
             }
         }
 
-        if (saveOk){
-            resultPatient = patientDao.save(patient);
-            logger.info("The patient "+ patient.getId() + " is updated");
-        } else {
-            resultPatient = null;
-            logger.info("The patient "+ patient.getId() + " does not exist");
-        }
         logger.info("Finish");
 
         return resultPatient;

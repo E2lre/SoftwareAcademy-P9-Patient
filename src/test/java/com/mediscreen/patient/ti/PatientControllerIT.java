@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +21,7 @@ import javax.persistence.Column;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -41,8 +43,8 @@ public class PatientControllerIT {
     //constantes de test
     String inexistingFirstnameConst = "James";
     String inexistingLastnameConst = "Bond";
-    String birthdate ="01/13/1693";
-    LocalDate birthdateConst ;
+    String birthdateConst ="01/01/1963";
+    LocalDate birthdateLocal ;
     String sexConst = "M";
     String addressConst = "10 downing St";
     String phoneConst = "0123456789";
@@ -54,7 +56,8 @@ public class PatientControllerIT {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
       //  try {
             //birthdateConst = LocalDate.parse()simpleDateFormat.parse(birthdate);
-            birthdateConst = LocalDate.parse(birthdate);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        birthdateLocal = LocalDate.parse(birthdateConst,df);
         //} catch (ParseException e){
         //    logger.error(e.getMessage());
         //}
@@ -62,7 +65,7 @@ public class PatientControllerIT {
 
     /*---------------------------------------- GET Find All -------------------------------*/
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void listPatients_existingPatients_patientListIsDone() throws Exception {
         //Given
@@ -74,7 +77,7 @@ public class PatientControllerIT {
     }
     /*---------------------------------------- GET Patient By Id -------------------------------*/
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void getPatientById_existingPatientId_patientIsDone() throws Exception {
         //Given
@@ -85,7 +88,7 @@ public class PatientControllerIT {
                 .andExpect(status().isOk());
     }
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void getPatientById_inexistingPatientId_errorIsReturn() throws Exception {
         //Given
@@ -97,14 +100,17 @@ public class PatientControllerIT {
     }
     /*---------------------------------------- POST Add Patient -------------------------------*/
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addPatient_inExistingPatient_patientIsCreate() throws Exception {
         //Given
+
+        /*DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate birthdateLocal2 = LocalDate.parse(birthdateConst,df);*/
         Patient patient = new Patient();
         patient.setFirstName(inexistingFirstnameConst);
         patient.setLastName(inexistingLastnameConst);
-        patient.setBirthdate(birthdateConst);
+        patient.setBirthdate(birthdateLocal);
         patient.setSex(sexConst);
         patient.setAddress(addressConst);
         patient.setPhone(phoneConst);
@@ -120,14 +126,14 @@ public class PatientControllerIT {
     }
 
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void addPatient_ExistingPatient_errorIsReturn() throws Exception {
         //Given
         Patient patient = new Patient(); //10,inexistingFirstnameConst,inexistingLastnameConst,birthdateConst,sexConst,addressConst,phoneConst);
         patient.setFirstName(existingFirstnameConst);
         patient.setLastName(existingLastnameConst);
-        patient.setBirthdate(birthdateConst);
+        patient.setBirthdate(birthdateLocal);
         patient.setSex(sexConst);
         patient.setAddress(addressConst);
         patient.setPhone(phoneConst);
@@ -144,7 +150,7 @@ public class PatientControllerIT {
 
     /*---------------------------------------- PUT update Patient -------------------------------*/
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void updatePatient_existingIdPatient_patientIsUpdate() throws Exception {
         //Given
@@ -152,7 +158,7 @@ public class PatientControllerIT {
         patient.setId(0);
         patient.setFirstName(existingFirstnameConst);
         patient.setLastName(existingLastnameConst);
-        patient.setBirthdate(birthdateConst);
+        patient.setBirthdate(birthdateLocal);
         patient.setSex(sexConst);
         patient.setAddress(addressConst);
         patient.setPhone(phoneConst);
@@ -167,7 +173,7 @@ public class PatientControllerIT {
                 .andExpect(status().isAccepted());
     }
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void updatePatient_inexistingIdPatient_errorIsReturn() throws Exception {
         //Given
@@ -175,7 +181,7 @@ public class PatientControllerIT {
         patient.setId(999);
         patient.setFirstName(existingFirstnameConst);
         patient.setLastName(existingLastnameConst);
-        patient.setBirthdate(birthdateConst);
+        patient.setBirthdate(birthdateLocal);
         patient.setSex(sexConst);
         patient.setAddress(addressConst);
         patient.setPhone(phoneConst);
@@ -191,7 +197,7 @@ public class PatientControllerIT {
     }
     /*---------------------------------------- DEL delete Patient -------------------------------*/
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deletePatient_existingIdAndCorrectPatientGiven_patientDeleted() throws Exception {
         //Given
@@ -199,7 +205,7 @@ public class PatientControllerIT {
         patient.setId(0);
         patient.setFirstName(existingFirstnameConst);
         patient.setLastName(existingLastnameConst);
-        patient.setBirthdate(birthdateConst);
+        patient.setBirthdate(birthdateLocal);
         patient.setSex(sexConst);
         patient.setAddress(addressConst);
         patient.setPhone(phoneConst);
@@ -214,7 +220,7 @@ public class PatientControllerIT {
                 .andExpect(status().isOk());
     }
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deletePatient_existingIdAndInorrectPatientGiven_patientDeleted() throws Exception {
         //Given
@@ -222,7 +228,7 @@ public class PatientControllerIT {
         patient.setId(1);
         patient.setFirstName(existingFirstnameConst);
         patient.setLastName(inexistingLastnameConst);
-        patient.setBirthdate(birthdateConst);
+        patient.setBirthdate(birthdateLocal);
         patient.setSex(sexConst);
         patient.setAddress(addressConst);
         patient.setPhone(phoneConst);
@@ -237,7 +243,7 @@ public class PatientControllerIT {
                 .andExpect(status().isNotAcceptable());
     }
     @Test
-    //@WithMockUser(roles = "USER")
+    @WithMockUser(roles = "USER")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     public void deletePatient_inexistingIdAndCorrectPatientGiven_patientDeleted() throws Exception {
         //Given
@@ -245,7 +251,7 @@ public class PatientControllerIT {
         patient.setId(1);
         patient.setFirstName(existingFirstnameConst);
         patient.setLastName(existingLastnameConst);
-        patient.setBirthdate(birthdateConst);
+        patient.setBirthdate(birthdateLocal);
         patient.setSex(sexConst);
         patient.setAddress(addressConst);
         patient.setPhone(phoneConst);

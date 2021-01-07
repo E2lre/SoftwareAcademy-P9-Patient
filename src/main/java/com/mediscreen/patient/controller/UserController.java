@@ -1,7 +1,7 @@
 package com.mediscreen.patient.controller;
 
-import com.mediscreen.patient.controller.exception.UserSignupException;
-import com.mediscreen.patient.controller.exception.UserNotFoundException;
+import com.mediscreen.patient.controller.exception.*;
+import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.model.User;
 import com.mediscreen.patient.service.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +17,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    /*---------------------------  GET Find All -----------------------------*/
+    /*---------------------------  Signin -----------------------------*/
     @GetMapping(value = "signin")
     @ResponseStatus(HttpStatus.OK)
     public String signin(@RequestParam(name = "username") String username,@RequestParam(name = "pwd") String pwd) throws UserNotFoundException {
@@ -62,9 +62,45 @@ public class UserController {
         }
 
         if (result == null) {
+            logger.error(" Impossible to Signup username " + username);
             throw new UserSignupException(" Impossible to Signup username " + username);
         }
         logger.info("signup finish");
         return result;
+    }
+
+    /*---------------------------  PUT user -----------------------------*/
+    @PutMapping(value = "user")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public User updateUser(@RequestParam(name = "username") String username,@RequestParam(name = "pwd") String pwd) throws UserCanNotBeSavedException {
+        logger.info("saveUser start");
+        User finalResult = null;
+        User userIn = new User(username,pwd);
+
+        finalResult = userService.updateUser(userIn);
+        if (finalResult == null) {
+
+            logger.warn("The patient " + username + " does not exist");
+            throw new UserCanNotBeSavedException("The patient " + username + " does not exist");
+        }
+        finalResult.setPwd("");//mask pwd to avoid dto implementaition
+        return finalResult;
+    }
+    /*---------------------------  Delete user -----------------------------*/
+    @DeleteMapping(value = "user")
+    @ResponseStatus(HttpStatus.OK)
+    public User deleteUser(@RequestParam(name = "username") String username) throws UserCanNotBeDeleteException {
+        logger.info("deleteUser start");
+
+        User finalResult = null;
+        User userIn = new User(username,"");
+
+        finalResult = userService.deleteUser(userIn);
+        if (finalResult == null) {
+
+            logger.warn("The User " + username + " can not be delete");
+            throw new UserCanNotBeDeleteException("The User " + username +  " can not be delete");
+        }
+        return finalResult;
     }
 }
