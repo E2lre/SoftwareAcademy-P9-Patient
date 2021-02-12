@@ -5,16 +5,15 @@ import com.mediscreen.patient.controller.exception.PatientCanNotBeSavedException
 import com.mediscreen.patient.controller.exception.PatientCanNotbeAddedException;
 import com.mediscreen.patient.controller.exception.PatientNotFoundException;
 import com.mediscreen.patient.model.Patient;
-//import com.mediscreen.patient.model.dto.PatientDto;
+
 import com.mediscreen.patient.service.PatientService;
-//import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,6 +25,11 @@ public class PatientController {
     private PatientService patientService;
 
     /*---------------------------  GET Find All -----------------------------*/
+
+    /**
+     * get patient list
+     * @return patients list
+     */
     @GetMapping(value = "patients")
     @ResponseStatus(HttpStatus.OK)
     public List<Patient> listPatients()  {
@@ -34,6 +38,13 @@ public class PatientController {
 
     }
     /*---------------------------  GET by id -----------------------------*/
+
+    /**
+     * get a patient by Id
+     * @param id Id of patient
+     * @return patient
+     * @throws PatientNotFoundException patient not found
+     */
     @GetMapping(value = "patient/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Patient getPatientById(@PathVariable long id) throws PatientNotFoundException {
@@ -49,6 +60,13 @@ public class PatientController {
 
     }
     /*---------------------------  POST Patient -----------------------------*/
+
+    /**
+     * create a patient
+     * @param patient patient to be create
+     * @return patient created
+     * @throws PatientCanNotbeAddedException patient already exist
+     */
     @PostMapping(value = "patient")
     @ResponseStatus(HttpStatus.CREATED)
     public String addPatient(@RequestBody Patient patient) throws PatientCanNotbeAddedException {
@@ -66,6 +84,13 @@ public class PatientController {
     }
 
     /*---------------------------  PUT Patient -----------------------------*/
+
+    /**
+     * update an existing patient
+     * @param patient patient to be updated
+     * @return patient updated
+     * @throws PatientCanNotBeSavedException patient not exist
+     */
     @PutMapping(value = "patient")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Patient updatePatient(@RequestBody Patient patient) throws PatientCanNotBeSavedException {
@@ -81,12 +106,13 @@ public class PatientController {
     }
 
 
+
     /**
      * Delete Patient
      * @param id Patient Id to be delete
      * @param patient Patient to be delete : it is for check with ID
      * @return patient deleted
-     * @throws PatientCanNotBeSavedException exception if db error or if patient is not correspond to the id
+     * @throws PatientCanNotBeDeleteException exception if db error or if patient is not correspond to the id
      */
     @DeleteMapping(value = "patient/{id}")
     @ResponseStatus(HttpStatus.OK)

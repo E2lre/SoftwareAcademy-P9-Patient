@@ -1,0 +1,54 @@
+version: '3'
+services:
+  eureka:
+    image: p9-eureka
+    ports:
+      - "9102:9102"
+    networks:
+      - my_network
+    restart: always
+  config:
+    depends_on:
+      - eureka
+    image: p9-config
+    ports:
+        - "9101:9101"
+    networks:
+      - my_network
+    restart: always
+  springadmin:
+    depends_on:
+        - config
+        - eureka
+    image:  p9-spring-admin
+    ports:
+        - "9105:9105"
+    networks:
+      - my_network
+    restart: always
+  zuul:
+    depends_on:
+      - config
+      - eureka
+    image:  p9-zuul
+    ports:
+      - "9004:9004"
+    networks:
+          - my_network
+    restart: always
+  patient:
+      depends_on:
+        - config
+        - eureka
+        - springadmin
+        - zuul
+      image:  p9-patient
+      ports:
+        - "8082:8082"
+      networks:
+        - my_network
+      restart: always
+
+
+networks:
+  my_network:

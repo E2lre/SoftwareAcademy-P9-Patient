@@ -1,16 +1,30 @@
 version: '3'
 services:
-  config:
-    image: p9-config
+  zipkin:
+    image:  openzipkin/zipkin
     ports:
-      - "9101:9101"
+      - "9411:9411"
+    environment:
+      DB_UPSTREAM: http://${DOCKER_GATEWAY_HOST:-host.docker.internal}:9411
     restart: always
   eureka:
     depends_on:
-      - config
+      - zipkin
     image: p9-eureka
+    # port externe:interne
     ports:
       - "9102:9102"
+      - "8761:8761"
+    environment:
+      DB_UPSTREAM: http://${DOCKER_GATEWAY_HOST:-host.docker.internal}:9102
+    restart: always
+  config:
+    depends_on:
+      - eureka
+      - zipkin
+    image: p9-config
+    ports:
+        - "9101:9101"
     restart: always
   springadmin:
     depends_on:
@@ -19,4 +33,12 @@ services:
     image:  p9-spring-admin
     ports:
       - "9105:9105"
+    restart: always
+  zuul:
+    depends_on:
+      - config
+      - eureka
+    image:  p9-zuul
+    ports:
+      - "9004:9004"
     restart: always

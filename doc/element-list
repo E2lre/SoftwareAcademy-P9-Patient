@@ -1,0 +1,17 @@
+com.mediscreen.configserver
+com.mediscreen.configserver.config
+com.mediscreen.eurekaserver
+com.mediscreen.eurekaserver.config
+com.mediscreen.patient
+com.mediscreen.patient.config
+com.mediscreen.patient.config.security
+com.mediscreen.patient.controller
+com.mediscreen.patient.controller.exception
+com.mediscreen.patient.dao
+com.mediscreen.patient.model
+com.mediscreen.patient.service
+com.mediscreen.springadmin
+com.mediscreen.springadmin.config
+com.mediscreen.zuulserver
+com.mediscreen.zuulserver.config
+com.mediscreen.zuulserver.filter

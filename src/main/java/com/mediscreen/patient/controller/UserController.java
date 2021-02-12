@@ -1,7 +1,6 @@
 package com.mediscreen.patient.controller;
 
 import com.mediscreen.patient.controller.exception.*;
-import com.mediscreen.patient.model.Patient;
 import com.mediscreen.patient.model.User;
 import com.mediscreen.patient.service.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +17,14 @@ public class UserController {
     private UserService userService;
 
     /*---------------------------  Signin -----------------------------*/
+
+    /**
+     * Check user/password for signin
+     * @param username user id
+     * @param pwd password for user id
+     * @return JWT tocken
+     * @throws UserNotFoundException error if not found or technical error
+     */
     @GetMapping(value = "signin")
     @ResponseStatus(HttpStatus.OK)
     public String signin(@RequestParam(name = "username") String username,@RequestParam(name = "pwd") String pwd) throws UserNotFoundException {
@@ -33,24 +40,17 @@ public class UserController {
         }
         return result;
     }
-    /*    @GetMapping(value = "signin")
-    @ResponseStatus(HttpStatus.OK)
-    public boolean signin(@RequestParam(name = "username") String username,@RequestParam(name = "pwd") String pwd) throws UserNotFoundException {
-    //public boolean signin(@RequestParam(name = "username") String username) throws UserNotFoundException {
-      //  String pwd = "pwd";
-        logger.info("signin start/finish");
-        User userIn =new User(username,pwd);
-        boolean result = true;
-        if (!userService.checkUser(userIn)) {
-            logger.warn("The user " + username + " with password is incorrect");
-            throw new UserNotFoundException("The user " + username + " with password is incorrect");
 
-        }
-        return result;
-    }*/
     /*---------------------------  Post Signup-----------------------------*/
 
-    @PostMapping(value="/signup")
+    /**
+     * Création a new user
+     * @param username user id
+     * @param pwd password for user id
+     * @return JWT tocken
+     * @throws UserSignupException error if already exist or technical error
+     */
+    @PostMapping(value="signup")
     @ResponseStatus(HttpStatus.CREATED)
     public String signup(@RequestParam(name = "username") String username,@RequestParam(name = "pwd") String pwd) throws UserSignupException {
         User user;
@@ -70,6 +70,14 @@ public class UserController {
     }
 
     /*---------------------------  PUT user -----------------------------*/
+
+    /**
+     * udpade an existing user
+     * @param username user id to be updated
+     * @param pwd new password
+     * @return user informations
+     * @throws UserCanNotBeSavedException error if not found or technical error
+     */
     @PutMapping(value = "user")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public User updateUser(@RequestParam(name = "username") String username,@RequestParam(name = "pwd") String pwd) throws UserCanNotBeSavedException {
@@ -87,6 +95,13 @@ public class UserController {
         return finalResult;
     }
     /*---------------------------  Delete user -----------------------------*/
+
+    /**
+     * delete an existing user
+     * @param username user id to be deleted
+     * @return user info deleted
+     * @throws UserCanNotBeDeleteException error if not found or technical error
+     */
     @DeleteMapping(value = "user")
     @ResponseStatus(HttpStatus.OK)
     public User deleteUser(@RequestParam(name = "username") String username) throws UserCanNotBeDeleteException {
