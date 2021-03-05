@@ -1,5 +1,5 @@
 # SoftwareAcademy-P9-Patient
-
+NE PLUS UTILISER DEPRECATED, remplacé par patientV2
 ## Installation
 
 ### Database installation
